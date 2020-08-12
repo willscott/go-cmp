@@ -24,14 +24,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
-	"github.com/google/go-cmp/cmp/internal/flags"
+	"github.com/willscott/go-cmp/cmp"
+	"github.com/willscott/go-cmp/cmp/cmpopts"
+	"github.com/willscott/go-cmp/cmp/internal/flags"
 
-	pb "github.com/google/go-cmp/cmp/internal/testprotos"
-	ts "github.com/google/go-cmp/cmp/internal/teststructs"
-	foo1 "github.com/google/go-cmp/cmp/internal/teststructs/foo1"
-	foo2 "github.com/google/go-cmp/cmp/internal/teststructs/foo2"
+	pb "github.com/willscott/go-cmp/cmp/internal/testprotos"
+	ts "github.com/willscott/go-cmp/cmp/internal/teststructs"
+	foo1 "github.com/willscott/go-cmp/cmp/internal/teststructs/foo1"
+	foo2 "github.com/willscott/go-cmp/cmp/internal/teststructs/foo2"
 )
 
 func init() {

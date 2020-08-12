@@ -11,7 +11,7 @@ import (
 	"testing"
 	"unicode"
 
-	"github.com/google/go-cmp/cmp/internal/flags"
+	"github.com/willscott/go-cmp/cmp/internal/flags"
 )
 
 func init() {

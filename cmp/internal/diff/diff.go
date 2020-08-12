@@ -16,7 +16,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/google/go-cmp/cmp/internal/flags"
+	"github.com/willscott/go-cmp/cmp/internal/flags"
 )
 
 // EditType represents a single operation within an edit-script.

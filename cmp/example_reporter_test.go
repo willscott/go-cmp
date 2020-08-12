@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/google/go-cmp/cmp"
+	"github.com/willscott/go-cmp/cmp"
 )
 
 // DiffReporter is a simple custom reporter that only records differences

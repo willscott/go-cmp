@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/google/go-cmp/cmp"
+	"github.com/willscott/go-cmp/cmp"
 	"golang.org/x/xerrors"
 )
 

@@ -35,10 +35,10 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/google/go-cmp/cmp/internal/diff"
-	"github.com/google/go-cmp/cmp/internal/flags"
-	"github.com/google/go-cmp/cmp/internal/function"
-	"github.com/google/go-cmp/cmp/internal/value"
+	"github.com/willscott/go-cmp/cmp/internal/diff"
+	"github.com/willscott/go-cmp/cmp/internal/flags"
+	"github.com/willscott/go-cmp/cmp/internal/function"
+	"github.com/willscott/go-cmp/cmp/internal/value"
 )
 
 // Equal reports whether x and y are equal by recursively applying the

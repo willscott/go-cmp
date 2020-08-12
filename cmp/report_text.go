@@ -12,7 +12,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/google/go-cmp/cmp/internal/flags"
+	"github.com/willscott/go-cmp/cmp/internal/flags"
 )
 
 var randBool = rand.New(rand.NewSource(time.Now().Unix())).Intn(2) == 0

@@ -10,7 +10,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/google/go-cmp/cmp/internal/function"
+	"github.com/willscott/go-cmp/cmp/internal/function"
 )
 
 // Option configures for specific behavior of Equal and Diff. In particular,
@@ -70,13 +70,13 @@ func (opts Options) filter(s *state, t reflect.Type, vx, vy reflect.Value) (out 
 			return ignore{} // Only ignore can short-circuit evaluation
 		case validator:
 			out = validator{} // Takes precedence over comparer or transformer
-		case *comparer, *transformer, Options:
+		case *comparer, *transformer, *compExp, Options:
 			switch out.(type) {
 			case nil:
 				out = opt
 			case validator:
 				// Keep validator
-			case *comparer, *transformer, Options:
+			case *comparer, *transformer, *compExp, Options:
 				out = Options{out, opt} // Conflicting comparers or transformers
 			}
 		}
@@ -371,6 +371,66 @@ func (cm *comparer) apply(s *state, vx, vy reflect.Value) {
 func (cm comparer) String() string {
 	return fmt.Sprintf("Comparer(%s)", function.NameOf(cm.fnc))
 }
+
+// CompareExpander performs a comparison like T as a Comparer would, and then
+// applies a different Transformer to T based on if the comparison is equal or not.
+// This is used to expand a potential pointer or other linked data structure only
+// when there are differences to explore.
+// The comparer `cmp` must be a function "func(T, T) bool" as a Comparer
+// The transformers `match` and `diff` must be transformers "func(T) R" and "func(T) S".
+func CompareExpander(name string, cmp interface{}, match interface{}, diff interface{}) Option {
+	fcmp := reflect.ValueOf(cmp)
+	fmatch := reflect.ValueOf(match)
+	fdiff := reflect.ValueOf(diff)
+	cm := &compExp{cmp: fcmp, name: name, expandSame: fmatch, expandDiff: fdiff}
+
+	// TODO: validation checks
+	if ti := fcmp.Type().In(0); ti.Kind() != reflect.Interface || ti.NumMethod() > 0 {
+		cm.typ = ti
+	}
+
+	return cm
+}
+
+type compExp struct {
+	core
+	name string
+	typ reflect.Type
+	cmp reflect.Value // func(T, T) bool
+	expandSame reflect.Value // func(T) R
+	expandDiff reflect.Value // func(T) S
+}
+
+func (cm *compExp) isFiltered() bool { return cm.typ != nil }
+
+func (cm *compExp) filter(_ *state, t reflect.Type, _, _ reflect.Value) applicableOption {
+	if cm.typ == nil || t.AssignableTo(cm.typ) {
+		return cm
+	}
+	return nil
+}
+
+func (cm *compExp) apply(s *state, vx, vy reflect.Value) {
+	eq := s.callTTBFunc(cm.cmp, vx, vy)
+	if !eq {
+		step := Transform{&transform{pathStep{typ: cm.expandDiff.Type().Out(0)}, &transformer{name:cm.name, fnc:cm.expandDiff, typ:cm.typ}}}
+		vvx := s.callTRFunc(cm.expandDiff, vx, step)
+		vvy := s.callTRFunc(cm.expandDiff, vy, step)
+		step.vx, step.vy = vvx, vvy
+		s.compareAny(step)	
+	} else {
+		step := Transform{&transform{pathStep{typ: cm.expandSame.Type().Out(0)}, &transformer{name:cm.name, fnc:cm.expandSame, typ:cm.typ}}}
+		vvx := s.callTRFunc(cm.expandSame, vx, step)
+		vvy := s.callTRFunc(cm.expandSame, vy, step)
+		step.vx, step.vy = vvx, vvy
+		s.compareAny(step)	
+	}
+}
+
+func (cm compExp) String() string {
+	return fmt.Sprintf("Compare+Expand(if %s then %s else %s)", function.NameOf(cm.cmp), function.NameOf(cm.expandSame), function.NameOf(cm.expandDiff))
+}
+
 
 // Exporter returns an Option that specifies whether Equal is allowed to
 // introspect into the unexported fields of certain struct types.
