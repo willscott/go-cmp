@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/go-cmp/cmp"
+	"github.com/willscott/go-cmp/cmp"
 )
 
 // TODO: Re-write these examples in terms of how you actually use the

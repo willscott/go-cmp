@@ -11,7 +11,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/google/go-cmp/cmp/internal/value"
+	"github.com/willscott/go-cmp/cmp/internal/value"
 )
 
 // Path is a list of PathSteps describing the sequence of operations to get

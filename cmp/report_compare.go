@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/google/go-cmp/cmp/internal/value"
+	"github.com/willscott/go-cmp/cmp/internal/value"
 )
 
 // numContextRecords is the number of surrounding equal records to print.

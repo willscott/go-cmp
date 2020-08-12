@@ -10,7 +10,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/google/go-cmp/cmp/internal/function"
+	"github.com/willscott/go-cmp/cmp/internal/function"
 )
 
 // Option configures for specific behavior of Equal and Diff. In particular,
