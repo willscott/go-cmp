@@ -4,6 +4,10 @@
 
 package cmp
 
+// LimitVerbosity applies the default verbosity limits. Set to false to have it
+// verbose.
+var LimitVerbosity = true
+
 // defaultReporter implements the reporter interface.
 //
 // As Equal serially calls the PushStep, Report, and PopStep methods, the
