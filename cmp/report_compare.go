@@ -98,10 +98,12 @@ func verbosityPreset(opts formatOptions, i int) formatOptions {
 // FormatDiff converts a valueNode tree into a textNode tree, where the later
 // is a textual representation of the differences detected in the former.
 func (opts formatOptions) FormatDiff(v *valueNode, ptrs *pointerReferences) (out textNode) {
-	if opts.DiffMode == diffIdentical {
-		opts = opts.WithVerbosity(1)
-	} else {
-		opts = opts.WithVerbosity(3)
+	if LimitVerbosity {
+		if opts.DiffMode == diffIdentical {
+			opts = opts.WithVerbosity(1)
+		} else {
+			opts = opts.WithVerbosity(3)
+		}
 	}
 
 	// Check whether we have specialized formatting for this node.
